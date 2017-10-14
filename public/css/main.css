@@ -1,0 +1,55 @@
+.card-subtitle{
+    padding: 10px 0;
+}
+.navbar{
+    margin-bottom: 15px;
+}
+i.fa{
+    font-size: 24px;
+}
+.lead i.fa{
+    font-size: 18px;
+    color:#868e96;
+}
+.container-poll{
+    width:400px;
+    height:400px; 
+    margin: auto;
+}
+.navbar-brand i{
+    font-size: 32px;
+}
+.facebook,
+.facebook:active{
+    padding: 15px;
+    border:3px solid;
+    background-color:#8b9dc3;
+    border-color:#8b9dc3;
+    color:#fff;
+}
+.facebook:hover,
+.facebook:focus{
+    box-shadow: none;
+    background-color:#fff;
+    border-color:#8b9dc3;
+    color:#8b9dc3;
+}
+
+.github,
+.github:active{
+    padding: 15px;
+    border:3px solid;
+    background-color:#2b3137;
+    border-color:#2b3137;
+    color:#fff;
+}
+.github:hover,
+.github:focus{
+    box-shadow: none;
+    background-color:#fff;
+    border-color:#2b3137;
+    color:#2b3137;
+}
+.img-thumbnail{
+    max-width: 155px;
+}
