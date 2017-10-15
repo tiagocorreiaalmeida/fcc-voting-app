@@ -69,11 +69,20 @@ router.get("/:id",(req,res)=>{
         if(!poll){
             res.render("404");
         }else{
-            res.render("poll",poll);
+            res.render("poll",{polldata: poll.toObject()});
         }
     }).catch((e)=>{
         console.log(e);
     });
+});
+
+router.post("/:id",(req,res)=>{
+    var ip = req.ip;
+    var user = req.user._id;
+    if(!req.isAuthenticated()){
+        var user = "notRegistered";
+    }
+    
 });
 
 module.exports = router;

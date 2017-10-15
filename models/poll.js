@@ -31,7 +31,10 @@ var PollSchema = new mongoose.Schema({
         user:{
             type:String,
             required:false,
-            trim:true
+        },
+        ip:{
+            type:String,
+            required:true
         }
     }]
 });

@@ -130,7 +130,7 @@ app.use(expressValidator({
 
 hbs.registerPartials(__dirname+"/views/partials");
 hbs.registerHelper("json",(context)=>{
-    return JSON.stringify(content);
+    return JSON.stringify(context);
 });
 
 app.get("/auth/github",passport.authenticate("github"));
