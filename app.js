@@ -73,7 +73,6 @@ passport.use(new FacebookStrategy({
         if(user){
             return(null,user);
         }else{
-            console.log(profile);
             let newUser = new User({
                 oauthID:profile.id,
                 name:profile.displayName,

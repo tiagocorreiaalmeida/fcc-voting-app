@@ -10,9 +10,17 @@
             <label for="select"><dt>What you would like to vote?</dt></label>
                 <select class="form-control" id="select" name="select">
                     {{#each options}}
-                    <option value="">{{title}}</option>
+                    <option value="{{title}}">{{title}}</option>
                     {{/each}}
             </select>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Add option" required>
+                <span class="input-group-btn">
+                    <a class="btn btn-success" href="#"><i class="fa fa-check" aria-hidden="true"></i></a>
+                </span>
+            </div>
             </div>
             <div class="form-group">
             <button type="submit" class="btn btn-success btn-block"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
@@ -21,6 +29,7 @@
             </div>
             </form>
             </div>
+            {{options}}
             <div class="col-md-7">
                 <div class="container-poll">
                 <canvas id="pollres"></canvas>
@@ -28,14 +37,48 @@
         </div>
     </div>
 </div>
- <script>
-$.ajax({
-    type: "GET",
-    url: "/poll/{{id}}",
-    dataType: "json",
-    success: function(data) {
-        
-    }
-})
+<script>
+    console.log(JSON.stringify({{options}}));
+{{!-- var obj = {
+	OptionOne:5,
+  OptionTwo:3,
+  OptionThree:2,
+  OptionFour:4,
+  OptionFive:1
+}
+var labelsName = [];
+var values = [];
+for(key in obj){
+	labelsName.push(key);
+  values.push(obj[key]);
+}
+
+var ctx = document.getElementById("pollres");
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: labelsName,
+        datasets: [{
+            label: '# of votes',
+            data: values,
+            backgroundColor: [
+             		'rgb(255,99,132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {}
+}); --}}
 </script>
 {{>footer}}
