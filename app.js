@@ -129,6 +129,9 @@ app.use(expressValidator({
 }));
 
 hbs.registerPartials(__dirname+"/views/partials");
+hbs.registerHelper("json",(context)=>{
+    return JSON.stringify(content);
+});
 
 app.get("/auth/github",passport.authenticate("github"));
 app.get("/auth/github/callback", passport.authenticate("github",{failureRedirect:"/"}),(req,res)=>{
