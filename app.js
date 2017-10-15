@@ -73,10 +73,11 @@ passport.use(new FacebookStrategy({
         if(user){
             return(null,user);
         }else{
+            console.log(profile);
             let newUser = new User({
                 oauthID:profile.id,
                 name:profile.displayName,
-                image:profile.photos[0].value,
+                image:"https://www.1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png",
                 social:profile.provider,
                 createdAt:moment().format("Do MMMM YYYY"),
             });
