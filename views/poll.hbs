@@ -8,6 +8,9 @@
             <form method="POST">
                   <div class="form-group">
             <label for="select"><dt>What you would like to vote?</dt></label>
+                {{#each errors}}
+                    <div class="alert alert-danger" role="alert">{{msg}}</div>
+                {{/each}}
                 <select class="form-control" id="select" name="select">
                     {{#each polldata.options}}
                     <option value="{{title}}">{{title}}</option>
@@ -17,9 +20,9 @@
            {{#if isAuthenticated}}
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Add option" required>
+                    <input type="text" id="newoption" class="form-control" placeholder="Add option" name="newoption">
                 <span class="input-group-btn">
-                    <a class="btn btn-success" href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                     <button id="add" type="submit" formaction="/poll/add/{{{polldata._id}}}" class="btn btn-success btn-block"><i class="fa fa-plus" aria-hidden="true"></i></button>
                 </span>
             </div>
             </div>
@@ -57,7 +60,6 @@
         }
         colors.push("rgb("+randomNumber()+","+randomNumber()+","+randomNumber()+")");
 }
-console.log(colors);
 var ctx = document.getElementById("pollres");
 var myChart = new Chart(ctx, {
     type: 'doughnut',
