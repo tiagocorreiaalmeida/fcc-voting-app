@@ -4,6 +4,9 @@
         <div class="col-md-12 mb-4">
                 <h1 class="display-4">My polls</h1>
         </div>
+        {{#if message}}
+            <div class="alert alert-success" role="alert">{{message}}</div>
+        {{/if}}
         {{#if polls}}
         <div class="col-md-12">
             <p class="lead">Bellow are your polls click on them for info, or <a href="/poll/new">here</a> to create a new one.</p>

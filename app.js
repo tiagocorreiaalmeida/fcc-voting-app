@@ -163,6 +163,10 @@ app.get("/logout",(req,res)=>{
     res.redirect("/");
 });
 
+app.use((req,res,next)=>{
+    res.render("404");
+});
+
 app.listen(3000,()=>{
     console.log("Running on port 3000");
 });

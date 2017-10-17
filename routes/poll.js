@@ -28,7 +28,6 @@ router.post("/new",authenticated,(req,res)=>{
     req.checkBody("options","Options are required").notEmpty();
     let errors = req.validationErrors();
     if(errors){
-        console.log(errors);
         res.render("add_poll.hbs",{errors});
     }else{
         let title = req.body.title;
@@ -66,11 +65,17 @@ router.post("/new",authenticated,(req,res)=>{
 });
 
 router.get("/:id",(req,res)=>{
+    var url = req.protocol + '://' + req.get('host') + req.originalUrl;
     Poll.findById(req.params.id).then((poll)=>{
         if(!poll){
             res.render("404");
         }else{
-            res.render("poll",{polldata: poll.toObject()});
+            poll.toObject();
+            poll.url = encodeURI(url);
+            if(req.user._id.toString() === poll.author.toString()){
+                poll.owner = true;
+            }
+            res.render("poll",{polldata: poll});
         }
     }).catch((e)=>{
         console.log(e);
@@ -88,15 +93,33 @@ router.post("/add/:id",(req,res)=>{
 router.post("/:id",(req,res)=>{
     let _id = ObjectID(req.params.id);
     let ip = req.ip;
-    let user = "anonymous";
+    let query;
+    let query2;
     if(req.isAuthenticated()){
-        user = req.user._id;
+        query = {
+            _id,
+            "$or":[{"votedBy.user":req.user._id},{"votedBy.ip":ip}]
+        };
+        query2 = {
+            "votedBy.$.user":req.user._id,
+            "votedBy.$.ip":ip
+        };
+    }else{
+        query = {
+            _id,
+            "votedBy.ip":ip
+        }; 
+        query2 = {
+            "votedBy.$.ip":ip
+        };
     }
-    Poll.findOne({_id,$or:[{"votedBy.user":user},{"votedBy.ip":ip}]}).then((result)=>{
+    Poll.findOne(query).then((result)=>{
         if(result){
-            console.log("allready voted");
+            result.toObject();
+            result.error = "You allready voted for this poll!";
+            res.render("poll",{polldata:result});
         }else{
-            Poll.findOneAndUpdate({_id, "options.title":req.body.select},{$inc:{"options.$.votes":1},$push:{"votedBy.$.user":user,"votedBy.$.ip":ip}}).then((data)=>{
+            Poll.findOneAndUpdate({_id, "options.title":req.body.select},{$inc:{"options.$.votes":1},$push:query2}).then((data)=>{
                 if(data){
                     res.redirect(data._id);
                 }else{
@@ -109,6 +132,22 @@ router.post("/:id",(req,res)=>{
     }).catch((e)=>{
         console.log(e);
     });
+});
+
+router.post("/delete/:id",authenticated,(req,res)=>{
+    Poll.findById(req.params.id).then((poll)=>{
+        if(!poll || poll.author.toString() !== req.user._id.toString()){
+            res.redirect("/");
+        }else{
+            Poll.findByIdAndRemove(poll._id).then((data)=>{
+                res.render("my_polls",{message:"Poll deleted"});
+            }).catch((e)=>{
+                console.log(e);
+            })
+        }
+    }).catch((e)=>{
+        console.log(e);
+    })
 });
 
 module.exports = router;
