@@ -80,7 +80,14 @@ router.get("/:id",(req,res)=>{
 
 router.post("/:id",(req,res)=>{
     let _id = ObjectID(req.params.id);
-    let ip = req.ip;
+    let ip;
+    if (req.headers['x-forwarded-for']) {
+        ip = req.headers['x-forwarded-for'].split(",")[0];
+    } else if (req.connection && req.connection.remoteAddress) {
+        ip = req.connection.remoteAddress;
+    } else {
+        ip = req.ip;
+    }
     let query;
     let query2;
     if(req.isAuthenticated()){
@@ -122,7 +129,7 @@ router.post("/:id",(req,res)=>{
 });
 
 router.post("/add/:id",(req,res)=>{
-    let option = req.body.newoption;
+    let option = req.body.newoption.trim();
     Poll.findById(req.params.id).then((poll)=>{
         poll.toObject()
         if(poll.options.filter((ele)=>ele.title === option).length > 0){
