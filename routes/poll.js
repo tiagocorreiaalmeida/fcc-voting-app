@@ -10,8 +10,6 @@ router.get("/my",authenticated,(req,res)=>{
     Poll.find({author:req.user._id}).then((polls)=>{
         if(polls){
             res.render("my_polls",{polls});
-        }else{
-            res.render("my_polls");
         }
     }).catch((e)=>{
         console.log(e);
@@ -39,11 +37,10 @@ router.post("/new",authenticated,(req,res)=>{
                 title:optionsSplit[i]
             });
         }
-        console.log(options);
         Poll.findOne({title}).then((data)=>{
             if(data){
-                let error = "A poll with the same title allready exists";
-                res.render("add_poll.hbs",{error});
+                req.flash("error","A poll with the same title allready exists");
+                res.render("add_poll.hbs");
             }else{
                 let newPoll = new Poll({
                     title,
@@ -52,7 +49,6 @@ router.post("/new",authenticated,(req,res)=>{
                     options
                 });
                 newPoll.save().then((data)=>{
-                    console.log("success do something else");
                     res.redirect("/poll/"+data._id);
                 }).catch((e)=>{
                     console.log(e);
@@ -65,14 +61,14 @@ router.post("/new",authenticated,(req,res)=>{
 });
 
 router.get("/:id",(req,res)=>{
-    var url = req.protocol + '://' + req.get('host') + req.originalUrl;
+    let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     Poll.findById(req.params.id).then((poll)=>{
         if(!poll){
             res.render("404");
         }else{
             poll.toObject();
             poll.url = encodeURI(url);
-            if(req.user._id.toString() === poll.author.toString()){
+            if(req.user && req.user._id.toString() === poll.author.toString()){
                 poll.owner = true;
             }
             res.render("poll",{polldata: poll});
@@ -80,14 +76,6 @@ router.get("/:id",(req,res)=>{
     }).catch((e)=>{
         console.log(e);
     });
-});
-
-router.post("/add/:id",(req,res)=>{
-    req.checkBody("title","Title is required").notEmpty();
-    let errors = req.validationErrors();
-    if(errors){
-        res.render("poll",errors);
-    }
 });
 
 router.post("/:id",(req,res)=>{
@@ -115,9 +103,8 @@ router.post("/:id",(req,res)=>{
     }
     Poll.findOne(query).then((result)=>{
         if(result){
-            result.toObject();
-            result.error = "You allready voted for this poll!";
-            res.render("poll",{polldata:result});
+            req.flash("error","You allready voted for this poll");
+            res.redirect(_id);
         }else{
             Poll.findOneAndUpdate({_id, "options.title":req.body.select},{$inc:{"options.$.votes":1},$push:query2}).then((data)=>{
                 if(data){
@@ -134,13 +121,37 @@ router.post("/:id",(req,res)=>{
     });
 });
 
+router.post("/add/:id",(req,res)=>{
+    let option = req.body.newoption;
+    Poll.findById(req.params.id).then((poll)=>{
+        poll.toObject()
+        if(poll.options.filter((ele)=>ele.title === option).length > 0){
+            req.flash("error","The option you tried to create allready exists!");
+            res.redirect("/poll/"+req.params.id);
+        }else{
+            Poll.findByIdAndUpdate(poll._id,{$push:{"options":{title:option}}},{new: true}).then((poll)=>{
+                poll.toObject();
+                if(req.user && req.user._id.toString() === poll.author.toString()){
+                    poll.owner = true;
+                }
+                res.render("poll",{polldata:poll});
+            }).catch((e)=>{
+                console.log(e);
+            });
+        }
+    }).catch((e)=>{
+        console.log(e);
+    });
+});
+
 router.post("/delete/:id",authenticated,(req,res)=>{
     Poll.findById(req.params.id).then((poll)=>{
         if(!poll || poll.author.toString() !== req.user._id.toString()){
             res.redirect("/");
         }else{
             Poll.findByIdAndRemove(poll._id).then((data)=>{
-                res.render("my_polls",{message:"Poll deleted"});
+                req.flash("success","Poll deleted with success");
+                res.redirect("/poll/my");
             }).catch((e)=>{
                 console.log(e);
             })

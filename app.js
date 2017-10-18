@@ -9,6 +9,7 @@ const GithubStrategy = require("passport-github");
 const FacebookStrategy = require("passport-facebook");
 const moment = require("moment");
 const MongoStore = require("connect-mongo")(session);
+const flash = require("express-flash");
 
 const mongoose = require("./config/mongoose.js");
 const Poll = require("./models/poll");
@@ -99,7 +100,7 @@ app.use((req,res,next)=>{
     res.locals.isAuthenticated = req.isAuthenticated();
     next();
 });
-
+app.use(flash());
 passport.serializeUser((user,done)=>{
     done(null,user.id);
 });

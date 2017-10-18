@@ -57,3 +57,29 @@ i.fa{
 .alert-success{
     width:100%;
 }
+footer{
+    border-top: 6px solid #34495e;
+    background-color:#e9ecef;
+}
+footer .col-md-12{
+    padding: 15px;
+}
+.madeby{
+    font-weight: 400;
+    font-size: 1.35rem;
+    color:#34495e;
+}
+.social a{
+    display: inline-block;
+    border: 2px solid #34495e;
+    color:#34495e;
+    background-color:transparent;
+    padding:7px;
+}
+.social a:hover{
+    color:#e9ecef;
+    background-color:#34495e;
+}
+.social a i{
+    min-width: 31px;
+}

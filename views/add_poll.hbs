@@ -6,6 +6,9 @@
     {{#each errors}}
       <div class="alert alert-danger" role="alert">{{msg}}</div>
     {{/each}}
+    {{#if messages.error}}
+    <div class="alert alert-danger" role="alert">{{messages.error}}</div>
+    {{/if}}
   <form method="POST">
   <div class="form-group">
     <label for="title"><dt>Title</dt></label>

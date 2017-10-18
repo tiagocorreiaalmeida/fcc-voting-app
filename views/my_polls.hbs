@@ -4,8 +4,8 @@
         <div class="col-md-12 mb-4">
                 <h1 class="display-4">My polls</h1>
         </div>
-        {{#if message}}
-            <div class="alert alert-success" role="alert">{{message}}</div>
+        {{#if messages.success}}
+            <div class="alert alert-success" role="alert">{{ messages.success}}</div>
         {{/if}}
         {{#if polls}}
         <div class="col-md-12">

@@ -4,7 +4,8 @@
   "description": "vote and create your favourite voting pools",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
   },
   "author": "Tiago Correia",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "connect-mongo": "^2.0.0",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
+    "express-flash": "0.0.2",
     "express-session": "^1.15.6",
     "express-validator": "^4.2.1",
     "hbs": "^4.0.1",

@@ -1,10 +1,10 @@
 {{>header}}
 <div class="jumbotron container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="pollinfo">
             <h3>{{{polldata.title}}}</h3>
-            {{#if polldata.error}}
-                <div class="alert alert-danger" role="alert">{{{polldata.error}}}</div>
+            {{#if messages.error}}
+            <div class="alert alert-danger" role="alert">{{messages.error}}</div>
                 {{/if}}
         </div>
          <div class="col-md-5">
