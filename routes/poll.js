@@ -32,9 +32,11 @@ router.post("/new",authenticated,(req,res)=>{
         let optionsSplit = req.body.options.match(/([^,\s][^\,]*[^,\s]*)/g);
         let options= [];
         let author = req.user._id;
-        for(let i=0; i <optionsSplit.length; i++){
+       for(let i=0; i <optionsSplit.length; i++){
+          let trim = optionsSplit[i].trim();
+            if(trim !== "")
             options.push({
-                title:optionsSplit[i]
+                title:trim
             });
         }
         Poll.findOne({title}).then((data)=>{
@@ -93,11 +95,11 @@ router.post("/:id",(req,res)=>{
     if(req.isAuthenticated()){
         query = {
             _id,
-            "$or":[{"votedBy.user":req.user._id},{"votedBy.ip":ip}]
+            "$or":[{"votedBy.user":req.user._id.toString()},{"votedBy.ip":ip}]
         };
-        query2 = {
-            "votedBy.$.user":req.user._id,
-            "votedBy.$.ip":ip
+      query2 = {
+            "votedBy.user":req.user._id.toString(),
+            "votedBy.ip":ip
         };
     }else{
         query = {
@@ -105,7 +107,7 @@ router.post("/:id",(req,res)=>{
             "votedBy.ip":ip
         }; 
         query2 = {
-            "votedBy.$.ip":ip
+            "votedBy.ip":ip
         };
     }
     Poll.findOne(query).then((result)=>{
@@ -137,11 +139,7 @@ router.post("/add/:id",(req,res)=>{
             res.redirect("/poll/"+req.params.id);
         }else{
             Poll.findByIdAndUpdate(poll._id,{$push:{"options":{title:option}}},{new: true}).then((poll)=>{
-                poll.toObject();
-                if(req.user && req.user._id.toString() === poll.author.toString()){
-                    poll.owner = true;
-                }
-                res.render("poll",{polldata:poll});
+                res.redirect("/poll/"+poll._id);
             }).catch((e)=>{
                 console.log(e);
             });
@@ -169,4 +167,3 @@ router.post("/delete/:id",authenticated,(req,res)=>{
 });
 
 module.exports = router;
-

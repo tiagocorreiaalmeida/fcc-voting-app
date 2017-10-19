@@ -27,16 +27,10 @@ var PollSchema = new mongoose.Schema({
                 default:0
             }
     }],
-    votedBy:[{
-        user:{
-            type:String,
-            required:false,
-        },
-        ip:{
-            type:String,
-            required:true
-        }
-    }]
+    votedBy:{
+        user:[],
+        ip:[]
+    }
 });
 
 var Poll = mongoose.model("Poll",PollSchema);
