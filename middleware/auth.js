@@ -1,4 +1,4 @@
-var authenticated = (req,res,next)=>{
+let authenticated = (req,res,next)=>{
     if(req.isAuthenticated()){
         return next();
     }
